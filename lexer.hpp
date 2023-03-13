@@ -1,16 +1,16 @@
-#ifndef HAHA_LANGUAGE_INTERPRETER_H_
-#define HAHA_LANGUAGE_INTERPRETER_H_
+#ifndef HAHA_LANGUAGE_LEXER_H_
+#define HAHA_LANGUAGE_LEXER_H_
 
-namespace interpreter{
+namespace lexer{
 	
 	struct token {
 		string keyword, name, value;
 		int int_value=0;
 		};
-		
+	
 	struct loop_construct {
-		string line;
 		token new_token;
+		string text_line;
 		};
 		
 	//Remove this heresy later
@@ -29,17 +29,16 @@ namespace interpreter{
 	- haahaa = loop
 	- he = end if
 	- hehe = end loop
+	- hhh = random
 	*/
 	
 	vector<token> integer_variables;
 	vector<token> string_variables;
-	vector<loop_construct> loop_vector;
+	vector<token> loop_vector;
 	bool if_flag_skipper=false;
 	bool loop_flag=false;
-	int loop_number=1;
 	
 	void process_token(token& token_input,string text_line){
-		regex first_word_pattern("^\\w+");
 		regex second_word_pattern("^\\w+\\s+(\\w+)");
 		regex secondAll_word_pattern("^\\w+\\W+([\\w\\W]+)");
 		regex secondAllnumber_word_pattern("^\\w+\\W+(\\d+)");
@@ -49,23 +48,6 @@ namespace interpreter{
 		regex condition_checker("^\\w+\\s(\\w+)\\s([=|<|>|!])\\s(\\w+)");
 		
 		smatch matched_keyword;
-		
-		
-		
-		if(loop_flag){
-			loop_construct new_loop;
-			new_loop.line = text_line;
-			new_loop.new_token = token_input;
-			loop_vector.push_back(new_loop);
-			}
-		
-		
-		//if
-		regex_search(text_line,matched_keyword,first_word_pattern);
-				if(matched_keyword.str(1)=="he") if_flag_skipper=false;
-				if(if_flag_skipper) return;
-		
-		
 		
 		// int
 		if(token_input.keyword=="ha"){
@@ -169,18 +151,17 @@ namespace interpreter{
 					return;
 					}
 				else if(matched_keyword.str(2)==">"){
-					if(!(stoi(x)>stoi(y))) if_flag_skipper=true;
+					if(!(x>y)) if_flag_skipper=true;
 					return;
 					}
 				else if(matched_keyword.str(2)=="<"){
-					if(!(stoi(x)<stoi(y))) if_flag_skipper=true;
+					if(!(x<y)) if_flag_skipper=true;
 					return;
 					}
 			}
 		
 		else if(token_input.keyword=="hhaa"){
 			regex_search(text_line,matched_keyword,second_word_pattern);
-			
 			for(auto &i : integer_variables){
 				if(i.name==matched_keyword.str(1)){
 					cin>>i.int_value;
@@ -196,32 +177,10 @@ namespace interpreter{
 			}
 		
 		else if(token_input.keyword=="haahaa"){
-			regex_search(text_line,matched_keyword,second_word_pattern);
-			loop_flag=true;
-			for(auto i : integer_variables){
-				if(i.name==matched_keyword.str(1)){
-					loop_number=i.int_value;
-					}
-				}
-			
 			
 			}
 		
-		else if(token_input.keyword=="hehe"){
-			loop_flag=false;
-			if(loop_number<=1) {
-				loop_vector.clear();
-				return;
-				}
-			for(int i=1; i<loop_number; ++i){
-			for(auto& i : loop_vector){
-				if(i.new_token.keyword=="hehe") continue;
-				process_token(i.new_token,i.line);
-					}
-				}
-			loop_vector.clear();
-			}
-		
+		//check for variable names
 		else {}
 	}
 	
@@ -241,7 +200,8 @@ namespace interpreter{
 				regex_search(text_line,matched_keyword,pattern);
 				
 				new_token.keyword = matched_keyword.str();
-
+				if(new_token.keyword=="he") if_flag_skipper=false;
+				if(if_flag_skipper)continue;
 				process_token(new_token,text_line);
 			}
 			
