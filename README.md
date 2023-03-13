@@ -1,7 +1,21 @@
 ## Haha Language
 This is my take on making my own basic esoteric interpreted shell programming language, named `Haha` for fun. This is just a very basic interpreter, coded only in a few days (with a lot of other days looking at tutorials and designing prototypes) as a beginner in C++, so it goes without saying: use it on your own risk. <sub>It might even explode.</sub>
 
+
+
+
 ---
+
+### Running
+The dependencies that the interpreter use are all present in the modern C++ standard library: `regex`, `vector`, `fstream`, etc. So it shouldn't be too hard to compile it with MinGW if you're on Windows. There's a statically-linked build in the release tab if you want.
+
+After you opened the program, it will then ask you to input the name of your `.haha` file. Simply write the full name of it there and press enter.
+
+
+
+
+---
+
 
 ### Contents
 - [Printing "Hello World!"](#pri)
@@ -12,15 +26,6 @@ This is my take on making my own basic esoteric interpreted shell programming la
 - [Conditions](#con)
 - [Control Flow](#cont)
 - [Warning](#war)
-
-
-
----
-
-### Running
-The dependencies that the interpreter use are all present in the modern C++ standard library: `regex`, `vector`, `fstream`, etc. So it shouldn't be too hard to compile it with MinGW if you're on Windows. There's a statically-linked build in the release tab if you want.
-
-After you opened the program, it will then ask you to input the name of your `.haha` file. Simply write the full name of it there and press enter.
 
 
 
