@@ -14,6 +14,16 @@ This is my take on making my own basic esoteric interpreted shell programming la
 - [Warning](#war)
 
 
+
+---
+
+### Running
+The dependencies that the interpreter use are all present in the modern C++ standard library: `regex`, `vector`, `fstream`, etc. So it shouldn't be too hard to compile it with MinGW if you're on Windows. There's a statically-linked build in the release tab if you want.
+
+After you opened the program, it will then ask you to input the name of your `.haha` file. Simply write the full name of it there and press enter.
+
+
+
 ---
 
 ### <a id="pri">Printing "Hello World!"</a>
