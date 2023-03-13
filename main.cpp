@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////
-// Developer: Von Ryan C. Nogadas  //
-// License: MIT                                     //
+// Developer: Von Ryan C. Nogadas                 //
+// License: MIT                                   //
 ////////////////////////////////////////////////////
 #include <iostream>
 #include <string>
