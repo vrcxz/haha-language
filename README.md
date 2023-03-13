@@ -5,13 +5,13 @@ This is my take on making my own basic esoteric interpreted shell programming la
 
 ### Contents
 - [Printing "Hello World!"](#pri)
-- [Variables]()
-- [Increment and Decrement]()
-- [Newlines]()
-- [System Commands]()
-- [Conditions]()
-- [Control Flow]()
-- [Simple Game]()
+- [Variables](#var)
+- [Increment and Decrement](#inc)
+- [Newlines](#new)
+- [System Commands](#sys)
+- [Conditions](#con)
+- [Control Flow](#cont)
+- [Warning](#war)
 
 
 ---
@@ -40,7 +40,7 @@ This is a comment!
 
 ---
 
-### Variables
+### <a id="var">Variables</a>
 `Haha` has only two data types: a signed integer (`ha`) and a string (`ah`).
 
 Here's an example of a variable declaration:
@@ -61,7 +61,7 @@ This declares a signed integer variable `x` initialized as 0 at its definition. 
 
 ---
 
-### Increment and Decrement
+### <a id="inc">Increment and Decrement</a>
 To increment/decrement an `ha` variable, you can use `a` (named after my silent scream after finding out my incapability to add arithmetic operations/lisp in this language).
 
 ```
@@ -71,7 +71,7 @@ a -- x
 
 ---
 
-### Newlines
+### <a id="new">Newlines</new>
 
 `Haha` doesn't read a newline symbol (`\n`). So in order to create one, you use `h`. It takes an integer as its subsequent argument to print how many newlines you want.
 
@@ -86,7 +86,7 @@ h 1000
 ```
 ---
 
-### System commands
+### <a id="sys">System commands</sys>
 To execute commands on the system console, you can use `aah`.
 
 
@@ -103,7 +103,7 @@ aah time
 
 ---
 
-### Conditions
+### <a id="con">Conditions</a>
 To start a condition, you can use the `haa` keyword, ending with `he` to break the condition.
 
 ```
@@ -121,7 +121,7 @@ Nothing will be printed to the console with this program (because 10 isn't great
 
 ---
 
-### Control Flow
+### <a id="cont">Control Flow</a>
 In order to iterate through a series of keywords, you can use `haahaa`, followed by an `ah` variable argument, and ending with `hehe` to break the iteration.
 
 ```
@@ -139,8 +139,8 @@ Output: `56789`
 
 ---
 
-### Warning
+### <a id="war">Warning</a>
 This is my very first time creating my own programming language, so expect that there would be a LOT of edge cases (also zero error handling).  I'm simply relatively inexperienced in the end, so constructive criticisms are always welcomed!
 
 #### License
-MIT
+[MIT]()
