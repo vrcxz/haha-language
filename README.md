@@ -158,7 +158,7 @@ Nothing will be printed to the console with this program (because 10 isn't great
 ---
 
 ### <a id="cont">Control Flow</a>
-In order to iterate through a series of keywords, you can use `haahaa`, followed by an `ah` variable argument, and ending with `hehe` to break the iteration.
+In order to iterate through a series of keywords, you can use `haahaa`, followed by an `ah` variable argument to specify how many times you want to re-iterate, and ending with `hehe` to break the iteration.
 
 ```
 ha x 5
