@@ -1,16 +1,16 @@
-#ifndef HAHA_LANGUAGE_LEXER_H_
-#define HAHA_LANGUAGE_LEXER_H_
+#ifndef HAHA_LANGUAGE_INTERPRETER_H_
+#define HAHA_LANGUAGE_INTERPRETER_H_
 
-namespace lexer{
+namespace interpreter{
 	
 	struct token {
 		string keyword, name, value;
 		int int_value=0;
 		};
-	
+		
 	struct loop_construct {
+		string line;
 		token new_token;
-		string text_line;
 		};
 		
 	//Remove this heresy later
@@ -29,16 +29,18 @@ namespace lexer{
 	- haahaa = loop
 	- he = end if
 	- hehe = end loop
-	- hhh = random
 	*/
 	
 	vector<token> integer_variables;
 	vector<token> string_variables;
-	vector<token> loop_vector;
+	vector<loop_construct> loop_vector;
 	bool if_flag_skipper=false;
 	bool loop_flag=false;
+	int loop_number=1;
+	int *loop_number_ptr=&loop_number;
 	
 	void process_token(token& token_input,string text_line){
+		regex first_word_pattern("^\\w+");
 		regex second_word_pattern("^\\w+\\s+(\\w+)");
 		regex secondAll_word_pattern("^\\w+\\W+([\\w\\W]+)");
 		regex secondAllnumber_word_pattern("^\\w+\\W+(\\d+)");
@@ -46,8 +48,26 @@ namespace lexer{
 		regex second_third_math_pattern("^\\w+\\s+(\\+\\+|--)\\s+(\\w+)");
 		regex second_all_word_pattern("^\\w+\\W+(\\w+)\\s+([\\w\\W]+)");
 		regex condition_checker("^\\w+\\s(\\w+)\\s([=|<|>|!])\\s(\\w+)");
+		regex math_checker("^\\w+\\s(\\w+)\\s([\\+|-|\\*|\\/])\\s(\\w+)\\s(\\w+)");
 		
 		smatch matched_keyword;
+		
+		
+		
+		if(loop_flag){
+			loop_construct new_loop;
+			new_loop.line = text_line;
+			new_loop.new_token = token_input;
+			loop_vector.push_back(new_loop);
+			}
+		
+		
+		//if
+		regex_search(text_line,matched_keyword,first_word_pattern);
+				if(matched_keyword.str(1)=="he") if_flag_skipper=false;
+				if(if_flag_skipper) return;
+		
+		
 		
 		// int
 		if(token_input.keyword=="ha"){
@@ -95,6 +115,7 @@ namespace lexer{
 			regex_search(text_line,matched_keyword,second_word_pattern);
 			for(auto i : integer_variables){
 				if(i.name==matched_keyword.str(1)){
+					i.value=to_string(i.int_value);
 					cout<<i.value;
 					return;
 					}
@@ -151,17 +172,18 @@ namespace lexer{
 					return;
 					}
 				else if(matched_keyword.str(2)==">"){
-					if(!(x>y)) if_flag_skipper=true;
+					if(!(stoi(x)>stoi(y))) if_flag_skipper=true;
 					return;
 					}
 				else if(matched_keyword.str(2)=="<"){
-					if(!(x<y)) if_flag_skipper=true;
+					if(!(stoi(x)<stoi(y))) if_flag_skipper=true;
 					return;
 					}
 			}
 		
 		else if(token_input.keyword=="hhaa"){
 			regex_search(text_line,matched_keyword,second_word_pattern);
+			
 			for(auto &i : integer_variables){
 				if(i.name==matched_keyword.str(1)){
 					cin>>i.int_value;
@@ -177,10 +199,64 @@ namespace lexer{
 			}
 		
 		else if(token_input.keyword=="haahaa"){
+			regex_search(text_line,matched_keyword,second_word_pattern);
+			loop_flag=true;
+			for(auto i : integer_variables){
+				if(i.name==matched_keyword.str(1)){
+					loop_number=i.int_value;
+					}
+				}
+			
 			
 			}
 		
-		//check for variable names
+		else if(token_input.keyword=="hehe"){
+			loop_flag=false;
+			if(loop_number<=1) {
+				loop_vector.clear();
+				return;
+				}
+			for(int i=1; i<*loop_number_ptr; ++i){
+			for(auto& i : loop_vector){
+				if(i.new_token.keyword=="hehe") continue;
+				process_token(i.new_token,i.line);
+					}
+				}
+			loop_vector.clear();
+			}
+		
+		else if(token_input.keyword=="aha"){
+			regex_search(text_line,matched_keyword,math_checker);
+			int *x,*y,*z;
+			for(auto &i : integer_variables){
+				if(i.name==matched_keyword.str(1))
+					x=&i.int_value;
+				if(i.name==matched_keyword.str(3))
+					y=&i.int_value;
+				if(i.name==matched_keyword.str(4))
+					z=&i.int_value;
+				}
+				
+				if(matched_keyword.str(2)=="+"){
+					*z=*x+*y;
+					return;
+					}
+				else if(matched_keyword.str(2)=="-"){
+					*z=*x-*y;
+					return;
+					}
+				else if(matched_keyword.str(2)=="*"){
+					*z=(*x) * (*y);
+					return;
+					}
+				else if(matched_keyword.str(2)=="/"){
+					*z=(*x) / (*y);
+					return;
+					}
+					
+				
+			}
+		
 		else {}
 	}
 	
@@ -200,8 +276,7 @@ namespace lexer{
 				regex_search(text_line,matched_keyword,pattern);
 				
 				new_token.keyword = matched_keyword.str();
-				if(new_token.keyword=="he") if_flag_skipper=false;
-				if(if_flag_skipper)continue;
+
 				process_token(new_token,text_line);
 			}
 			
