@@ -78,8 +78,6 @@ This declares a signed integer variable `x` initialized as 0 at its definition. 
 ---
 
 
----
-
 ### <a id="art">Arithmetic</a>
 `Haha` only supports the four basic math operations `+`,`-`,`*`,`/`.
 
