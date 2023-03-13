@@ -143,4 +143,4 @@ Output: `56789`
 This is my very first time creating my own programming language, so expect that there would be a LOT of edge cases (also zero error handling).  I'm simply relatively inexperienced in the end, so constructive criticisms are always welcomed!
 
 #### License
-[MIT]()
+[MIT](https://github.com/vonnogadas/haha-language/blob/main/LICENSE)
