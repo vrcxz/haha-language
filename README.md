@@ -98,7 +98,7 @@ It takes four arguments: `variable`, `operator`,`variable`,`variable`. Where the
 ---
 
 ### <a id="inc">Increment and Decrement</a>
-To increment/decrement an `ha` variable, you can use `a` (named after my silent scream after finding out my incapability to add arithmetic operations/lisp in this language).
+To increment/decrement an `ha` variable, you can use `a`.
 
 ```
 a ++ x
