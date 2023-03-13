@@ -20,6 +20,7 @@ After you opened the program, it will then ask you to input the name of your `.h
 ### Contents
 - [Printing "Hello World!"](#pri)
 - [Variables](#var)
+- [Arithmetic](#art)
 - [Increment and Decrement](#inc)
 - [Newlines](#new)
 - [System Commands](#sys)
@@ -73,6 +74,28 @@ hahaha x
 ```
 
 This declares a signed integer variable `x` initialized as 0 at its definition. It then proceeds to request an input from the user to store in the `x` variable— then prints it out to the console.
+
+---
+
+
+---
+
+### <a id="art">Arithmetic</a>
+`Haha` only supports the four basic math operations `+`,`-`,`*`,`/`.
+
+To calculate, you can use the `aha` keyword. 
+```
+ha x 3
+ha y 2
+ha z 0
+aha x + y z
+hahaha z
+```
+Output: `5`
+
+
+It takes four arguments: `variable`, `operator`,`variable`,`variable`. Where the first two variables are used to get the numbers to calculate and the third one to store it (which in this case is variable `z`).
+
 
 ---
 
