@@ -169,7 +169,7 @@ hehe
 ```
 Output: `56789`
 
-`Note: If you didn't add an argument to haahaa, it will automatically evaluate to 1. Nested iterations here are also a no-no.`
+`Note: If you didn't add an argument to haahaa, it will automatically evaluate to 1. Nested statements here are also a no-no.`
 
 
 
