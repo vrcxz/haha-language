@@ -27,7 +27,7 @@ After you opened the program, it will then ask you to input the name of your `.h
 - [System Commands](#sys)
 - [Conditions](#con)
 - [Control Flow](#cont)
-- [Rock,Paper,Scissors](#roc)
+- [Rock, Paper, Scissors](#roc)
 - [Warning](#war)
 
 
