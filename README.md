@@ -180,7 +180,7 @@ Output: `56789`
 ---
 
 ### <a id="roc">Rock, Papers, Scissors</a>
-Here's a simple implementation of a rock, papers, scissors game in `Haha` language:
+Here's a simple implementation of a rock, papers, scissors game in `Haha` language that loops 3 times:
 
 ```
 ha count 3
