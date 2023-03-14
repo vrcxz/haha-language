@@ -77,6 +77,8 @@ hahaha x
 
 This declares a signed integer variable `x` initialized as 0 at its definition. It then proceeds to request an input from the user to store in the `x` variable— then prints it out to the console.
 
+`Note: To delete a variable from memory, use the 'aaa' keyword, followed by the variable name to wipe out its existence from the memory.`
+
 ---
 
 
@@ -96,6 +98,7 @@ Output: `5`
 
 It takes four arguments: `variable`, `operator`,`variable`,`variable`. Where the first two variables are used to get the numbers to calculate and the third one to store it (which in this case is variable `z`).
 
+In addition to arithmetic, I also added random number operation by using the `hhh` keyword, followed by the variable name you want to store it into.
 
 ---
 
@@ -180,6 +183,15 @@ Output: `56789`
 Here's a simple implementation of a rock, papers, scissors game in `Haha` language:
 
 ```
+ha count 3
+
+ha ai 0
+ha p 0
+ha total 0
+
+
+haahaa count
+
 haha Lets play rock, papers, scissors:
 h 2
 haha 1 - Rock
@@ -191,12 +203,10 @@ h 2
 haha Player: 
 
 
-ha ai 0
-ha p 0
-ha total 0
 hhh 3 ai
 hhaa p
 h 1
+
 
 aha p + ai total
 aha p + total total
@@ -206,8 +216,11 @@ ha scissor 8
 ha notrockpaper 7
 ha notscissor 4
 
+
 haha Player: 
 hahaha p
+h 1
+hahaha rockpaper
 h 1
 
 haha AI: 
@@ -233,6 +246,15 @@ he
 haa total = notscissor
 haha You Lose!
 he
+
+h 2
+
+aaa rockpaper
+aaa scissor
+aaa notrockpaper
+aaa notscissor
+
+hehe
 ```
 
 
