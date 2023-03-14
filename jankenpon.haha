@@ -1,0 +1,53 @@
+haha Lets play rock, papers, scissors:
+h 2
+haha 1 - Rock
+h 1
+haha 2 - Paper
+h 1
+haha 3 - Scissor
+h 2
+haha Player: 
+
+
+ha ai 0
+ha p 0
+ha total 0
+hhh 3 ai
+hhaa p
+h 1
+
+aha p + ai total
+aha p + total total
+
+ha rockpaper 5
+ha scissor 8
+ha notrockpaper 7
+ha notscissor 4
+
+haha Player: 
+hahaha p
+h 1
+
+haha AI: 
+hahaha ai
+h 2
+
+haa p = ai
+haha Draw!
+he
+
+haa total = rockpaper
+haha Player Wins!
+he
+
+haa total = scissor
+haha Player Wins!
+he
+
+haa total = notrockpaper
+haha You Lose!
+he
+
+haa total = notscissor
+haha You Lose!
+he
