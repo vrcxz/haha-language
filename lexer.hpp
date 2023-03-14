@@ -30,6 +30,8 @@ namespace interpreter{
 	- haahaa = loop
 	- he = end if
 	- hehe = end loop
+	- hhh = random
+	- aaa = delete
 	*/
 	
 	vector<token> integer_variables;
@@ -280,7 +282,30 @@ namespace interpreter{
 					return;
 					}
 					
+			}
+			
+		else if(token_input.keyword=="aaa"){
+			regex_search(text_line,matched_keyword,second_word_pattern);
+			int index=0;
+			for(int i=0; i<integer_variables.size(); ++i){
+				if(integer_variables[i].name==matched_keyword.str(1)){
+					index=i;
+					auto it = integer_variables.begin() + index;
+					integer_variables.erase(it);
+					break;
+					}
+				}
 				
+				
+			for(int i=0; i<string_variables.size(); ++i){
+				if(string_variables[i].name==matched_keyword.str(1)){
+					index=i;
+					auto it = string_variables.begin() + index;
+					string_variables.erase(it);
+					break;
+					}
+				}
+			
 			}
 		
 		else {
