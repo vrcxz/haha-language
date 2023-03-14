@@ -24,6 +24,7 @@ namespace interpreter{
 	- hhaa = input
 	- h = newline
 	- aah = system
+	- aha = arithmetic
 	- a = increment/decrement 
 	- haa = if
 	- haahaa = loop
@@ -44,6 +45,7 @@ namespace interpreter{
 		regex second_word_pattern("^\\w+\\s+(\\w+)");
 		regex secondAll_word_pattern("^\\w+\\W+([\\w\\W]+)");
 		regex secondAllnumber_word_pattern("^\\w+\\W+(\\d+)");
+		regex second_thirdnumber_word_pattern("^\\w+\\W+(\\d+)\\s(\\w+)");
 		regex second_third_word_pattern("^\\w+\\W+(\\w+)\\W+(\\w+)");
 		regex second_third_math_pattern("^\\w+\\s+(\\+\\+|--)\\s+(\\w+)");
 		regex second_all_word_pattern("^\\w+\\W+(\\w+)\\s+([\\w\\W]+)");
@@ -64,8 +66,8 @@ namespace interpreter{
 		
 		//if
 		regex_search(text_line,matched_keyword,first_word_pattern);
-				if(matched_keyword.str(1)=="he") if_flag_skipper=false;
-				if(if_flag_skipper) return;
+				if(matched_keyword.str()=="he") if_flag_skipper=false;
+				if(if_flag_skipper) {return;}
 		
 		
 		
@@ -128,6 +130,20 @@ namespace interpreter{
 				}
 			}
 			
+		else if(token_input.keyword=="hhh"){
+				regex_search(text_line,matched_keyword,second_thirdnumber_word_pattern);
+				int number_limit=stoi(matched_keyword.str(1));
+				for(auto &i : integer_variables){
+					if(i.name==matched_keyword.str(2)){
+						i.int_value=rand()%number_limit+1;
+						i.value=to_string(i.int_value);
+						return;
+						}
+					}
+				}
+			
+			
+			
 		else if(token_input.keyword=="aah"){
 			regex_search(text_line,matched_keyword,secondAll_word_pattern);
 			system(matched_keyword.str(1).c_str());
@@ -153,12 +169,15 @@ namespace interpreter{
 			
 		else if(token_input.keyword=="haa"){
 			regex_search(text_line,matched_keyword,condition_checker);
-			string x,y;
+			string x="",y="";
+			int nx=0,ny=0;
 			for(auto i : integer_variables){
-				if(i.name==matched_keyword.str(1))
+				if(i.name==matched_keyword.str(1)){
 					x=i.value;
-				if(i.name==matched_keyword.str(3))
+					nx=i.int_value;}
+				if(i.name==matched_keyword.str(3)){
 					y=i.value;
+					ny=i.int_value;}
 				}
 			for(auto i : string_variables){
 				if(i.name==matched_keyword.str(1))
@@ -168,6 +187,7 @@ namespace interpreter{
 				}
 				
 				if(matched_keyword.str(2)=="="){
+					if(nx!=ny) if_flag_skipper=true;
 					if(x!=y) if_flag_skipper=true;
 					return;
 					}
@@ -227,37 +247,45 @@ namespace interpreter{
 		
 		else if(token_input.keyword=="aha"){
 			regex_search(text_line,matched_keyword,math_checker);
-			int *x,*y,*z;
+			int x,y,*z;
+			string *result_string;
 			for(auto &i : integer_variables){
 				if(i.name==matched_keyword.str(1))
-					x=&i.int_value;
+					x=i.int_value;
 				if(i.name==matched_keyword.str(3))
-					y=&i.int_value;
+					y=i.int_value;
 				if(i.name==matched_keyword.str(4))
 					z=&i.int_value;
+					result_string=&i.value;
 				}
 				
 				if(matched_keyword.str(2)=="+"){
-					*z=*x+*y;
+					*z=x+y;
+					*result_string=to_string(*z);
 					return;
 					}
 				else if(matched_keyword.str(2)=="-"){
-					*z=*x-*y;
+					*z=x-y;
+					*result_string=to_string(*z);
 					return;
 					}
 				else if(matched_keyword.str(2)=="*"){
-					*z=(*x) * (*y);
+					*z=(x) * (y);
+					*result_string=to_string(*z);
 					return;
 					}
 				else if(matched_keyword.str(2)=="/"){
-					*z=(*x) / (*y);
+					*z=(x) / (y);
+					*result_string=to_string(*z);
 					return;
 					}
 					
 				
 			}
 		
-		else {}
+		else {
+			//Do nothing, this is just comment lol
+			}
 	}
 	
 	void read_tokens(string file_name){
