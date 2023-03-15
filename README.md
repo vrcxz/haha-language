@@ -25,8 +25,8 @@ After you opened the program, it will then ask you to input the name of your `.h
 - [Increment and Decrement](#inc)
 - [Newlines](#new)
 - [System Commands](#sys)
-- [Conditions](#con)
-- [Control Flow](#cont)
+- [Selection](#con)
+- [Iteration](#cont)
 - [Rock, Paper, Scissors](#roc)
 - [Warning](#war)
 
@@ -144,7 +144,7 @@ aah time
 
 ---
 
-### <a id="con">Conditions</a>
+### <a id="con">Selection</a>
 To start a condition, you can use the `haa` keyword, ending with `he` to break the condition.
 
 ```
@@ -162,7 +162,7 @@ Nothing will be printed to the console with this program (because 10 isn't great
 
 ---
 
-### <a id="cont">Control Flow</a>
+### <a id="cont">Iteration</a>
 In order to iterate through a series of keywords, you can use `haahaa`, followed by an `ha` variable argument to specify how many times you want to re-iterate, and ending with `hehe` to break the iteration.
 
 ```
