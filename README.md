@@ -220,8 +220,6 @@ ha notscissor 4
 haha Player: 
 hahaha p
 h 1
-hahaha rockpaper
-h 1
 
 haha AI: 
 hahaha ai
