@@ -1,6 +1,6 @@
 ![cover](https://github.com/vonnogadas/haha-language/blob/34b933ca02dfe7082024b0b3190284d030383bf7/images%20(41).png)
 ## Haha Language
-This is my take on making my own basic esoteric interpreted shell programming language, named `Haha` for fun. This is just a very basic interpreter, coded only in a few days (with a lot of other days looking at tutorials and designing prototypes) as a beginner in C++, so it goes without saying: use it on your own risk. <sub>It might even explode.</sub>
+This is my take on making my own basic esoteric interpreted shell programming language, named `Haha` for fun. This is just a very basic interpreter, coded as a beginner in C++, so it goes without saying: use it on your own risk. <sub>It might even explode.</sub>
 
 
 
