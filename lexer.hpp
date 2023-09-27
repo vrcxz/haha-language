@@ -41,7 +41,8 @@ namespace interpreter{
 	bool loop_flag=false;
 	int loop_number=1;
 	int *loop_number_ptr=&loop_number;
-	
+
+        //Yeah, it's really bad. You could probably even post it to r/programminghorror.
 	void process_token(token& token_input,string text_line){
 		regex first_word_pattern("^\\w+");
 		regex second_word_pattern("^\\w+\\s+(\\w+)");
