@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0"/>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Useless Language</title>
+ </head>
+<body>
+<style >
+*{
+ padding: 0px;
+ margin: 0px;
+}
+
+body{
+}
+
+.container{
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ height: 100vh;
+ padding: 10px;
+}
+
+textarea{
+ width: 100%;
+ height: 100%;
+}
+
+#output{
+ height: 70%;
+ width: 100%;
+}
+
+button{
+ width: 100%;
+}
+</style>
+<div class="container">
+<textarea id="textbox"></textarea>
+<button onclick='run_program()'>Run</button>
+<div id="output"></div>
+</div>
+
+<script>
+let textbox_input = document.getElementById('textbox');
+let output = document.getElementById('output');
+
+function print_output(input){
+ output.innerHTML += input;
+}
+
+function clear_output(){
+ output.innerHTML = ' ';
+}
+
+let OPERATORS = ['+','-','*','/','%','=','(',
+                 ')','\"'];
+
+
+
+
+class Body{
+ constructor(parent = null){
+  this.buffer = '';
+  this.cache = '';
+  this.environment = {}; //hash map for variables
+  this.interrupt = false;
+  this.parent = parent;
+ }
+ 
+ set_buffer(buffer){
+  this.buffer = buffer;
+  this.cache = buffer;
+ }
+ 
+ restore_buffer(){
+  this.buffer = this.cache;
+ }
+ 
+ advance(i=1){
+  this.buffer = this.buffer.substring(i);
+ }
+ 
+ eatWhiteSpaces(){
+  let i = 0;
+  while((this.buffer[i] == ' ' || 
+         this.buffer[i] == '\n') &&
+         this.buffer.length > i ){
+   i++;
+  }
+  this.advance(i);
+ }
+ 
+ isOperator(char){
+  if(OPERATORS.indexOf(char) >= 0){
+   return true;
+  }
+  else{
+   return false;
+  }
+ }
+ 
+ isNumber(char){
+  return !isNaN(char) && 
+         !isNaN(parseFloat(char));
+ }
+ 
+ 
+ getString(){
+  this.eatWhiteSpaces();
+  let i = 0;
+  while(this.buffer[i] != '"' && 
+        this.buffer.length > i){
+   i++;
+  }
+  let value = this.buffer.substring(0,i);
+  this.advance(i);
+  return value;
+ }
+ 
+ 
+ getToken(){
+  this.eatWhiteSpaces();
+  
+  let i = 0;
+  while((this.buffer[i] != ' ' && 
+         this.buffer[i] != '\n') &&
+         this.buffer.length > i ){
+   i++;
+  }
+  let value = this.buffer.substring(0,i);
+  this.advance(i);
+  return value;
+ }
+ 
+ getIdentifier(){
+  this.eatWhiteSpaces();
+  if(this.buffer[0] == ' ' || 
+     this.buffer[0] == '\n' ||
+     this.isOperator(this.buffer[0])){
+   return 'NULL';
+  }
+  
+  let i = 0;
+  while((this.buffer[i] != ' ' && 
+         this.buffer[i] != '\n' &&
+        !this.isOperator(this.buffer[i])) &&
+         this.buffer.length > i ){
+   i++;
+  }
+  let value = this.buffer.substring(0,i);
+  this.advance(i);
+  return value;
+ }
+ 
+ peekIdentifier(){
+  this.eatWhiteSpaces();
+  if(this.buffer[0] == ' ' || 
+     this.buffer[0] == '\n' ||
+     this.isOperator(this.buffer[0])){
+   return 'NULL';
+  }
+  
+  let i = 0;
+  while((this.buffer[i] != ' ' && 
+         this.buffer[i] != '\n' &&
+        !this.isOperator(this.buffer[i])) &&
+         this.buffer.length > i ){
+   i++;
+  }
+  let value = this.buffer.substring(0,i);
+  return value;
+ }
+
+ 
+ 
+ getNumber(){
+  this.eatWhiteSpaces();
+  let negative = false;
+  if(this.buffer[0] == '+'){
+   this.advance();
+  }
+  else if(this.buffer[0] == '-'){
+   negative = true;
+   this.advance();
+  }
+  
+  let i = 0;
+  while((this.isNumber(this.buffer[i]) ||
+         this.buffer[i] == '.') &&
+         this.buffer.length > i ){
+   i++;
+  }
+  let value = this.buffer.substring(0,i);
+  value = parseFloat(value);
+  
+  if(negative){
+   value = -value;
+  }
+  this.advance(i);
+  return value;
+ }
+ 
+ getBody(){
+  let match_count = 0;
+  let new_body = '';
+  this.eatWhiteSpaces();
+
+  while(true){
+   let new_token = this.getToken();
+   
+   if(new_token == '👋👋'){
+    match_count++;
+   }
+   else if(new_token == '👋👋👋'){
+    if(match_count == 0){
+     break;
+    }
+    match_count--;
+   }
+   
+   new_body += new_token + ' ';
+   if(this.buffer.length <= 0){
+    break;
+   }
+  }
+  
+  return new_body;
+ }
+ 
+}
+
+
+class Interpreter{
+ constructor(){
+  this.global_interrupt = false;
+ }
+ 
+ //=========ERROR CHECKING===============//
+ error(message){
+  console.log(message);
+  print_output(message);
+  this.global_interrupt = true;
+ }
+ 
+ strict_match(body,expected){
+  if(body.buffer[0] == expected){
+   body.advance();
+  }
+  else{
+   this.error('Expected: ' + expected);
+  }
+ }
+ 
+ //================PARSING=================//
+ get_variable(body,key){
+  if(key == '') return 'NULL';
+  if(key[0] == '$') key = key.substring(1);
+  
+  let iterator = body;
+   
+  while(!iterator.environment[key]){
+   if(!iterator.parent) break;
+   iterator = iterator.parent;
+  }
+  
+  return iterator.environment[key];
+ }
+ 
+ 
+ parse_factor(body){
+  let value = 0;
+  body.eatWhiteSpaces();
+  
+  if(body.isNumber(body.buffer[0]) ||
+     body.buffer[0] == '+' || 
+     body.buffer[0] == '-' ){
+   value = body.getNumber();
+  }
+  else if(body.buffer[0] == '('){
+   this.strict_match(body,'(');
+   value = this.parse_expression(body);
+   this.strict_match(body,')');
+  }
+  else if(body.buffer.substring(0,6) == 'random'){
+   body.getIdentifier();
+   value = parseInt(Math.random() * 100);
+  }
+  else{
+   let key = body.getIdentifier();
+   value = parseFloat(this.get_variable(body,key));
+  }
+  
+  return value;
+ }
+ 
+ 
+ parse_term(body){
+  let value = this.parse_factor(body);
+  body.eatWhiteSpaces();
+  
+  while(body.buffer.length > 0){
+   if(body.buffer[0] == '*'){
+    this.strict_match(body,'*');
+    value *= this.parse_factor(body);
+   }
+   else if(body.buffer[0] == '/'){
+    this.strict_match(body,'/');
+    value /= this.parse_factor(body);
+   }
+   else if(body.buffer[0] == '%'){
+    this.strict_match(body,'%');
+    value %= this.parse_factor(body);
+   }
+   else{
+    break;
+   }
+  }
+  return value;
+ }
+
+ parse_expression(body){
+  let value = this.parse_term(body);
+  body.eatWhiteSpaces();
+  
+  while(body.buffer.length > 0){
+   if(body.buffer[0] == '+'){
+    this.strict_match(body,'+');
+    value += this.parse_term(body);
+   }
+   else if(body.buffer[0] == '-'){
+    this.strict_match(body,'-');
+    value -= this.parse_term(body);
+   }
+   else{
+    break;
+   }
+  }
+ 
+  return value;
+ }
+ 
+ 
+ parse_relation(body){
+  let value = this.parse_expression(body);
+  body.eatWhiteSpaces();
+  
+  while(body.buffer.length > 0){
+   if(body.buffer[0] == '<'){
+    this.strict_match(body,'<');
+    let second_value = this.parse_expression(body);
+    if(value < second_value) value = 1;
+    else value = 0;
+    
+   }
+   else if(body.buffer[0] == '>'){
+    this.strict_match(body,'>');
+    let second_value = this.parse_expression(body);
+    if(value > second_value) value = 1;
+    else value = 0;
+    
+   }
+   else if(body.buffer.substring(0,2) == '=='){
+    this.strict_match(body,'=');
+    this.strict_match(body,'=');
+    let second_value = this.parse_expression(body);
+    if(value == second_value) value = 1;
+    else value = 0;
+    
+   }
+   else{
+    break;
+   }
+  }
+ 
+  return value;
+ }
+ 
+ 
+ 
+ parse_logic(body){
+  let value = this.parse_expression(body);
+  body.eatWhiteSpaces();
+  
+  while(body.buffer.length > 0){
+   if(body.buffer.substring(0,2) == '||'){
+    this.strict_match(body,'|');
+    this.strict_match(body,'|');
+    let second_value = this.parse_expression(body);
+    if(value || second_value) value = 1;
+    else value = 0;
+    
+   }
+   else if(body.buffer.substring(0,2) == '&&'){
+    this.strict_match(body,'&');
+    this.strict_match(body,'&');
+    let second_value = this.parse_expression(body);
+    if(value && second_value) value = 1;
+    else value = 0;
+    
+   }
+   else{
+    break;
+   }
+  }
+ 
+  return value;
+ }
+ 
+ 
+ 
+ parse_statement(body){
+  body.eatWhiteSpaces();
+  
+  //declare
+  if(body.buffer[0] == '$'){
+   this.strict_match(body,'$');
+   body.eatWhiteSpaces();
+   let key = body.getIdentifier();
+   body.eatWhiteSpaces();
+   this.strict_match(body,'=');
+   body.eatWhiteSpaces();
+   body.environment[key] = this.parse_logic(body);
+   return;
+  }
+  
+  
+  //statements
+  let statement = body.getIdentifier();
+  if(statement == '') return;
+  
+  if(statement == 'fry'){
+   body.eatWhiteSpaces();
+   if(body.isNumber(body.buffer[0]) ||
+      body.buffer[0] == '+' ||
+      body.buffer[0] == '-' ||
+      body.buffer[0] == '('){
+    let result = this.parse_logic(body);
+    console.log(result);
+    print_output(result);
+   }
+   else if(body.buffer[0] == '"'){
+    this.strict_match(body,'"');
+    let result = body.getString();
+    console.log(result);
+    print_output(result);
+    this.strict_match(body,'"');
+    console.log(body.buffer)
+   }
+   else{
+    let key = body.getIdentifier();
+    let result = this.get_variable(body,key);
+    console.log(result);
+    print_output(result);
+   }
+  }
+  else if(statement == 'pick'){
+   let value = prompt('Enter a value: ');
+   let key = body.getIdentifier();
+   body.environment[key] = value;
+  }
+  else if(statement == 'oc'){
+   this.strict_match(body,'(');
+   let condition = this.parse_logic(body);
+   this.strict_match(body,')');
+   if(body.getIdentifier() != '👋👋')
+    error('Error: expected 👋👋');
+   let new_body = new Body(body);
+   new_body.buffer = body.getBody();
+   
+   if(condition){
+    this.parse_statement(new_body);
+   }
+  }
+  else if(statement == 'si'){
+   this.strict_match(body,'(');
+   let count = this.parse_logic(body);
+   this.strict_match(body,')');
+   body.getIdentifier();
+    
+   let new_body = new Body(body);
+   new_body.set_buffer(body.getBody());
+   
+   for(let i=0; i<count; i++){
+    this.parse_all_statements(new_body);
+    new_body.restore_buffer();
+   }
+  }
+  else if(statement == 'br'){
+   print_output('<br/>');
+  }
+  else if(statement == '👋👋'){
+   let new_body = new Body(body);
+   new_body.buffer = body.getBody();
+   this.parse_all_statements(new_body);
+  }
+  else{
+   console.log('st:' + statement)
+   this.error('Error: Unknown statement');
+  }
+  
+ }
+ 
+ parse_all_statements(body){
+  while(!this.global_interrupt && 
+        !body.interrupt &&
+         body.buffer.length > 0 ){
+   this.parse_statement(body);
+  }
+ }
+ 
+ 
+ //================INTERFACE=================//
+ interpret(code){
+  let body = new Body();
+  body.buffer = code;
+  body.environment['AUTHOR'] = 'von';
+  
+  this.parse_all_statements(body);
+ }
+}
+
+ 
+let o = new Interpreter();
+
+
+function run_program(){
+ if(textbox_input.value == ''){
+  print_output('No input');
+  return;
+ }
+ 
+ clear_output();
+ o.interpret(textbox_input.value);
+ o.global_interrupt = false;
+}
+
+
+</script>
+</body>
+</html>
